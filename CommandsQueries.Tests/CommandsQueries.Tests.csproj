@@ -42,10 +42,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommandSerializerTests.cs" />
+    <Compile Include="DoSomethingCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CommandsQueries\CommandsQueries.csproj">
+      <Project>{87e7e38e-84bc-4d06-bc2b-8c0458a82d5a}</Project>
+      <Name>CommandsQueries</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
