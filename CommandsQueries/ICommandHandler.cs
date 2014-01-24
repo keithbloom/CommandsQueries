@@ -4,4 +4,6 @@
     {
         TResult Handle(TCommand command);
     }
+
+    public interface ICommandHandler<in TCommand> : ICommandHandler<TCommand, UnitType> { }
 }

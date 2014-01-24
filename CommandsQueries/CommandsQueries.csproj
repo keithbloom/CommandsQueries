@@ -52,9 +52,11 @@
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Contracts\AddContractToCompanyCommand.cs" />
     <Compile Include="Contracts\AddContractToCompanyCommandHandler.cs" />
+    <Compile Include="Contracts\SearchContractsForCompany.cs" />
     <Compile Include="ICommand.cs" />
     <Compile Include="IMediator.cs" />
     <Compile Include="IQuery.cs" />
+    <Compile Include="IQueryHandler.cs" />
     <Compile Include="JsonCommandSerializer.cs" />
     <Compile Include="ICommandHandler.cs" />
     <Compile Include="ICommandPostHandleInspector.cs" />

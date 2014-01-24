@@ -13,6 +13,24 @@ namespace CommandsQueries
             _container = container;
         }
 
+        public virtual Response<TResponseData> Request<TResponseData>(IQuery<TResponseData> query)
+        {
+            var response = new Response<TResponseData>();
+
+            try
+            {
+                var plan = new MediatorPlan<TResponseData>(typeof(IQueryHandler<,>), "Handle", query.GetType(), _container);
+
+                response.Data = plan.Invoke(query);
+            }
+            catch (Exception e)
+            {
+                response.Exception = e;
+            }
+
+            return response;
+        }
+
         public Response<TResponseData> Send<TResponseData>(ICommand<TResponseData> command)
         {
             var response = new Response<TResponseData>();
