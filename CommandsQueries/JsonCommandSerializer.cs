@@ -1,15 +1,16 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Newtonsoft.Json;
 
 namespace CommandsQueries
 {
     public class JsonCommandSerializer : ICommandPostHandleInspector
     {
-        private StringWriter stringWriter;
+        TextWriter _textWriter;
 
-        public JsonCommandSerializer(StringWriter stringWriter)
+        public JsonCommandSerializer(TextWriter textWriter)
         {
-            this.stringWriter = stringWriter;
+            _textWriter = textWriter;
         }
 
 
@@ -22,9 +23,12 @@ namespace CommandsQueries
         {
             var type = command.GetType();
 
-            var result = JsonConvert.SerializeObject((object) command, type, new JsonSerializerSettings());
+            var result = JsonConvert.SerializeObject(command, type, new JsonSerializerSettings());
 
-            stringWriter.Write(result);
+            _textWriter.WriteLine();
+            
+            _textWriter.WriteLine("{0}_{1}.txt",DateTime.UtcNow.Ticks, type);
+            _textWriter.Write(result);
 
 
         }

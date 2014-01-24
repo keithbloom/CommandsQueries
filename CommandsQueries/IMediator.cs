@@ -2,6 +2,6 @@
 {
     public interface IMediator
     {
-        TResult Send<TResult>(ICommand<TResult> command);
+        Response<TResponseData> Send<TResponseData>(ICommand<TResponseData> command);
     }
 }

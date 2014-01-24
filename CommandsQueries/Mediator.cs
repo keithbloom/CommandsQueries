@@ -1,27 +1,78 @@
-﻿using System.Linq;
+﻿using System;
+using System.Reflection;
+using StructureMap;
 
 namespace CommandsQueries
 {
     public class Mediator : IMediator
     {
-        private readonly ICommandPostHandleInspector[] postProcessors;
+        readonly IContainer _container;
 
-        public Mediator(ICommandPostHandleInspector[] postProcessors)
+        public Mediator(IContainer container)
         {
-            this.postProcessors = postProcessors;
+            _container = container;
         }
 
-        public TResult Send<TResult>(ICommand<TResult> command)
+        public Response<TResponseData> Send<TResponseData>(ICommand<TResponseData> command)
         {
-            // mediate
-            // serialize the command;
+            var response = new Response<TResponseData>();
 
-            foreach (var processor in postProcessors.Where(x => x.InterestedIn(command)))
+            var postProcessors = _container.GetAllInstances<ICommandPostHandleInspector>();
+
+            try
             {
-                processor.Inspect(command);
+                var plan = new MediatorPlan<TResponseData>(typeof(ICommandHandler<,>), "Handle", command.GetType(), _container);
+
+                response.Data = plan.Invoke(command);
+            }
+            catch (Exception e)
+            {
+                response.Exception = e;
             }
 
-            return default(TResult);
+            foreach (var commandPostHandleInspector in postProcessors)
+            {
+                if (commandPostHandleInspector.InterestedIn(command))
+                {
+                    commandPostHandleInspector.Inspect(command);
+                }
+            }
+
+            return response;
+        }
+
+        class MediatorPlan<TResult>
+        {
+            readonly MethodInfo HandleMethod;
+            readonly Func<object> HandlerInstanceBuilder;
+
+            public MediatorPlan(Type handlerTypeTemplate, string handlerMethodName, Type messageType, IContainer container)
+            {
+                var handlerType = handlerTypeTemplate.MakeGenericType(messageType, typeof(TResult));
+
+                HandleMethod = GetHandlerMethod(handlerType, handlerMethodName, messageType);
+
+                HandlerInstanceBuilder = () => container.GetInstance(handlerType);
+            }
+
+            MethodInfo GetHandlerMethod(Type handlerType, string handlerMethodName, Type messageType)
+            {
+                return handlerType
+                    .GetMethod(handlerMethodName,
+                        BindingFlags.Public | BindingFlags.Instance | BindingFlags.InvokeMethod,
+                        null, CallingConventions.HasThis,
+                        new[] { messageType },
+                        null);
+            }
+
+            public TResult Invoke(object message)
+            {
+                return (TResult)HandleMethod.Invoke(HandlerInstanceBuilder(), new[] { message });
+            }
+
+            
         }
     }
+
+
 }
