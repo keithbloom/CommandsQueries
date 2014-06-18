@@ -2,7 +2,7 @@
 
 namespace CommandsQueries.Contracts
 {
-    public class AddContractToCompanyCommandHandler : AbstractCommmandHanlder<AddContractToCompanyCommand>
+    public class AddContractToCompanyCommandHandler : AbstractCommmandHandler<AddContractToCompanyCommand>
     {
         TextWriter _textWriter;
 
