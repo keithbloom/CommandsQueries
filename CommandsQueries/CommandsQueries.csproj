@@ -57,7 +57,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AbstractCommmandHanlder.cs" />
+    <Compile Include="AbstractCommmandHandler.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Companies\AddCompanyCommand.cs" />
     <Compile Include="Companies\AddCompanyCommandHandler.cs" />

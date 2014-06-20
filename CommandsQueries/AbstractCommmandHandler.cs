@@ -1,6 +1,6 @@
 ﻿namespace CommandsQueries
 {
-    public abstract class AbstractCommmandHanlder<TMessage> : ICommandHandler<TMessage, UnitType>
+    public abstract class AbstractCommmandHandler<TMessage> : ICommandHandler<TMessage, UnitType>
         where TMessage : ICommand<UnitType>
     {
         public UnitType Handle(TMessage command)
